@@ -5,7 +5,9 @@
 
 一:activity
 
-这是一个activity基类，需要传入一个指定view类型(继承的activity的类型)和一个presenter(继承baseactivity的类型)
+这是一个activity基类，需要传入一个指定view类型(继承的activity的类型)和一个presenter(继承baseactivity的类型)来实现在activity的生命周期
+中实现presenter对view的绑定和解绑。
+
 ![Image text](https://github.com/factorlinebarrel/MVP/blob/master/screenshot/1.jpg)
 
 
@@ -26,7 +28,7 @@
 
 三：使用
 
-LoginActivity。
+LoginActivity。他需要进行绑定的presenter和view就是他本身loginview类型关联的loginview和loginpresenter。
  
     public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements LoginView {
     private EditText name_et, password_et;
@@ -55,7 +57,7 @@ LoginActivity。
         });
     }
     
-LoginPresenter。
+LoginPresenter。这是一个用于LoginActivity的presenter，即他需要绑定也是一个loginview类型的view。
     
     public class LoginPresenter extends NewBasePresenter<LoginView> {
     private UserBiz biz;
@@ -72,8 +74,12 @@ LoginPresenter。
         biz.login(getMvpView().getName(), getMvpView().getPassword(), new LoginListener() {
     
 
+
+
 例如我们要写一个登录的activity，登录的activity就需要一个获取账号密码以及登录成功和失败时的接口（loginview），
-我们由loginactivity实现，此时这个activity需要和presenter进行绑定，而这个view是loginview类型的，所以在baseactivity和NewBasePresenter通过loginview进行绑定和解绑,
+我们由loginactivity实现，此时这个activity需要和presenter进行绑定，而这个view是loginview类型的，所以在baseactivity和NewBasePresenter通过loginview进行绑定和解绑。
+
+
 
     public abstract class BaseActivity<V, T extends NewBasePresenter<V>> extends AppCompatActivity {
     public T presenter;
@@ -92,8 +98,10 @@ LoginPresenter。
 
     }
 
+
 指定activity在绑定给指定presenter之后，presenter就可以拿着这个view进行操作。
 比如这个LoginActivity是拥有getName和getPassword方法的。
+ 
  
      public interface LoginView {
      String getName();
@@ -105,7 +113,9 @@ LoginPresenter。
      void showFailedError();//失败提示
      }
   
+  
   那么在presenter里面就可以通过getMvpView().getName()形式获取view的数据。
+    
     
       public void login() {
 
@@ -135,4 +145,6 @@ LoginPresenter。
         });
     }
   
+ 这样就可以成功实现presenter对view的绑定和解绑,以及解决presenter对view的持有而导致的内存泄漏问题。 
+ 
   
