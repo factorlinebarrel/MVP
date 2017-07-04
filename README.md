@@ -79,29 +79,53 @@ LoginPresenter。这是一个用于LoginActivity的presenter，即他需要绑�
 
 
 
-此时BaseActivity中知道,这个activity需要和presenter进行绑定，而这个view是loginview类型的，所以在BaseActivity和NewBasePresenter通过LoginView进行绑定和解绑。
+此时通过查看BaseActivity和NewBasePresenter知道,BaseActivity和NewBasePresenter通过LoginView进行绑定和解绑,presenter获取view，而BaseActivity在生命周期中实现绑定和解绑。
 
 
+1.activity(在生命周期中实现presenter的绑定和解绑)
 
-    public abstract class BaseActivity<V, T extends NewBasePresenter<V>> extends AppCompatActivity {
-    public T presenter;
+      @Override
+      protected void onCreate(Bundle savedInstanceState) {
+          super.onCreate(savedInstanceState);
+          presenter = initPresenter();
+      }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        presenter = initPresenter();
-    }
+      @Override
+      protected void onResume() {
+          super.onResume();
+          //业务逻辑请求必须在绑定之后，否则空指针
+          presenter.attach(getApplicationContext(), (V) this);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //业务逻辑请求必须在绑定之后，否则空指针
-        presenter.attach(getApplicationContext(), (V) this);
+      }
 
-    }
-    
-    
-在这里presenter和view的绑定已经在activity中执行,指定activity在绑定给指定presenter之后，presenter就可以拿着这个view进行操作。
+      @Override
+      protected void onDestroy() {
+          presenter.detach();
+          super.onDestroy();
+      }
+      
+ 2.presenter(绑定和解绑view)
+
+       public void attach(Context context, T view) {
+        mContextRef = new WeakReference<>(context);
+        mViewRef = new WeakReference<>(view);
+        if (sAppContext == null && context != null) {
+            sAppContext = context.getApplicationContext();
+        }
+     }
+       public void detach() {
+           if (mContextRef != null) {
+               mContextRef.clear();
+           }
+           mContextRef = null;
+           if (mViewRef != null) {
+               mViewRef.clear();
+           }
+           mViewRef = null;
+      }
+ 
+ 
+指定activity在绑定给指定presenter之后，presenter就可以拿着这个view进行操作。
 
 
 比如这个LoginActivity是拥有getName和getPassword方法的。
