@@ -25,7 +25,10 @@
 ![Image text](https://github.com/factorlinebarrel/MVP/blob/master/screenshot/4.jpg)
 
 三：使用
-public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements LoginView {
+
+LoginActivity。
+ 
+    public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements LoginView {
     private EditText name_et, password_et;
     private String name, password;
     private Button login_btn;
@@ -51,3 +54,23 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
             }
         });
     }
+    
+LoginPresenter。
+    
+    public class LoginPresenter extends NewBasePresenter<LoginView> {
+    private UserBiz biz;
+    private Handler handler;
+
+    public LoginPresenter() {
+        biz = new UserBizIml();
+        handler = new Handler(Looper.getMainLooper());
+    }
+
+    //实际逻辑实现
+    public void login() {
+
+        biz.login(getMvpView().getName(), getMvpView().getPassword(), new LoginListener() {
+    
+
+例如我们要写一个登录的activity，登录的activity就需要一个获取账号密码以及登录成功和失败时的接口（loginview），
+我们由loginactivity实现，此时这个activity需要和presenter进行绑定，而这个view是loginview类型的，所以在baseactivity和NewBasePresenter通过loginview进行绑定和解绑,即LoginActivity和LoginPresenter。
