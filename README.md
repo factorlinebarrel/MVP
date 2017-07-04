@@ -28,7 +28,10 @@
 
 三：使用
 
-LoginActivity。他需要进行绑定的presenter和view就是他本身loginview类型关联的loginview和loginpresenter。
+例如我们要写一个登录的activity，登录的activity就需要一个获取账号密码以及登录成功和失败时的接口（LoginView），
+由loginActivity实现.
+
+LoginActivity。他需要进行绑定的presenter和view就是他本身loginview类型关联的LoginView和LoginPresenter(如下)。
  
     public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements LoginView {
     private EditText name_et, password_et;
@@ -76,8 +79,7 @@ LoginPresenter。这是一个用于LoginActivity的presenter，即他需要绑�
 
 
 
-例如我们要写一个登录的activity，登录的activity就需要一个获取账号密码以及登录成功和失败时的接口（loginview），
-我们由loginactivity实现，此时这个activity需要和presenter进行绑定，而这个view是loginview类型的，所以在baseactivity和NewBasePresenter通过loginview进行绑定和解绑。
+此时BaseActivity中知道,这个activity需要和presenter进行绑定，而这个view是loginview类型的，所以在BaseActivity和NewBasePresenter通过LoginView进行绑定和解绑。
 
 
 
@@ -97,9 +99,11 @@ LoginPresenter。这是一个用于LoginActivity的presenter，即他需要绑�
         presenter.attach(getApplicationContext(), (V) this);
 
     }
+    
+    
+在这里presenter和view的绑定已经在activity中执行,指定activity在绑定给指定presenter之后，presenter就可以拿着这个view进行操作。
 
 
-指定activity在绑定给指定presenter之后，presenter就可以拿着这个view进行操作。
 比如这个LoginActivity是拥有getName和getPassword方法的。
  
  
@@ -114,9 +118,9 @@ LoginPresenter。这是一个用于LoginActivity的presenter，即他需要绑�
      }
   
   
-  那么在presenter里面就可以通过getMvpView().getName()形式获取view的数据。
-    
-    
+presenter持有的view不为null，就可以调用view的一系列方法，比如在presenter中可以通过getMvpView().getName()形式获取view的数据。
+  
+  
       public void login() {
 
         biz.login(getMvpView().getName(), getMvpView().getPassword(), new LoginListener() {
