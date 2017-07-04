@@ -73,4 +73,66 @@ LoginPresenter。
     
 
 例如我们要写一个登录的activity，登录的activity就需要一个获取账号密码以及登录成功和失败时的接口（loginview），
-我们由loginactivity实现，此时这个activity需要和presenter进行绑定，而这个view是loginview类型的，所以在baseactivity和NewBasePresenter通过loginview进行绑定和解绑,即LoginActivity和LoginPresenter。
+我们由loginactivity实现，此时这个activity需要和presenter进行绑定，而这个view是loginview类型的，所以在baseactivity和NewBasePresenter通过loginview进行绑定和解绑,
+
+    public abstract class BaseActivity<V, T extends NewBasePresenter<V>> extends AppCompatActivity {
+    public T presenter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter = initPresenter();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //业务逻辑请求必须在绑定之后，否则空指针
+        presenter.attach(getApplicationContext(), (V) this);
+
+    }
+
+指定activity在绑定给指定presenter之后，presenter就可以拿着这个view进行操作。
+比如这个LoginActivity是拥有getName和getPassword方法的。
+ 
+     public interface LoginView {
+     String getName();
+
+     String getPassword();
+
+     void toMainActivity(User user);//成功跳转Activity
+
+     void showFailedError();//失败提示
+     }
+  
+  那么在presenter里面就可以通过getMvpView().getName()形式获取view的数据。
+    
+      public void login() {
+
+        biz.login(getMvpView().getName(), getMvpView().getPassword(), new LoginListener() {
+            @Override
+            public void loginSuccess(final User user) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isActivityAlive()) {
+                            //只有当isActivityAlive返回true时才可以执行与Activity相关的操作,比如 弹出Dialog、Window、跳转Activity等操作.
+                        }
+                        getMvpView().toMainActivity(user);
+                    }
+                });
+            }
+
+            @Override
+            public void loginFailed() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        getMvpView().showFailedError();
+                    }
+                });
+            }
+        });
+    }
+  
+  
