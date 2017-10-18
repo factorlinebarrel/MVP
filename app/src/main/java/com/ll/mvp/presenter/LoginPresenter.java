@@ -62,14 +62,12 @@ public class LoginPresenter extends NewBasePresenter<LoginView> {
 
                     @Override
                     public void onNext(User user) {
-                        System.out.println("Activity的情况:" + isActivityAlive());
                         if (isActivityAlive()) {
                             //只有当isActivityAlive返回true时才可以执行与Activity相关的操作,比如 弹出Dialog、Window、跳转Activity等操作.
-                            System.out.println("Activity的情况:" + isActivityAlive());
+                            getMvpView().toMainActivity(user);
+                            //解除订阅
+                            disposable.dispose();
                         }
-                        getMvpView().toMainActivity(user);
-                        //解除订阅
-                        disposable.dispose();
                     }
 
                     @Override
