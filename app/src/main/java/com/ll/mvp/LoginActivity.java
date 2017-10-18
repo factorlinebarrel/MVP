@@ -62,6 +62,25 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     @Override
     public void toMainActivity(User user) {
         Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
+      /*  final AlertDialog.Builder normalDialog = new AlertDialog.Builder(LoginActivity.this);
+        normalDialog.setTitle("我是一个普通Dialog");
+        normalDialog.setMessage("你要点击哪一个按钮呢?");
+        normalDialog.setPositiveButton("确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //...To-do
+                    }
+                });
+        normalDialog.setNegativeButton("关闭",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //...To-do
+                    }
+                });
+        // 显示
+        normalDialog.show();*/
     }
 
     @Override

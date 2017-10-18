@@ -163,6 +163,7 @@ public abstract class NewBasePresenter<T> {
             return true;
         }
         Context context = mContextRef.get();
+        System.out.println(context instanceof Activity);
         if (context instanceof Activity) {
             Activity hostActivity = (Activity) context;
             return hostActivity.isFinishing();

@@ -22,8 +22,7 @@ public abstract class BaseActivity<V, T extends NewBasePresenter<V>> extends App
     protected void onResume() {
         super.onResume();
         //业务逻辑请求必须在绑定之后，否则空指针
-        presenter.attach(getApplicationContext(), (V) this);
-
+        presenter.attach(BaseActivity.this, (V) this);
     }
 
     @Override
