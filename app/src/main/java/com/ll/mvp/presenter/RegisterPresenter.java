@@ -28,6 +28,7 @@ public class RegisterPresenter extends NewBasePresenter<RegisterView> {
         biz.register(getMvpView().getName(), getMvpView().getPassword(), new RegisterListener() {
             @Override
             public void RegisterSuccess() {
+                //异步
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
