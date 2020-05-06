@@ -20,7 +20,7 @@
 
 ![Image text](https://github.com/factorlinebarrel/MVP/blob/master/screenshot/2.jpg)
 
-这是一个simple哥写的使用弱引用和动态代理的新的presenter封装类，解决了activity被销毁view空指针的问题。
+这是的使用弱引用和动态代理的新的presenter封装类，解决了activity被销毁view空指针的问题。
 ![Image text](https://github.com/factorlinebarrel/MVP/blob/master/screenshot/3.jpg)
 
 同样这个类里面也是一样要进行presenter对view 的绑定和解绑。
